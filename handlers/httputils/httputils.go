@@ -4,14 +4,12 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-
-	"golang.org/x/net/context"
 )
 
 // ContextHandler defines how API handler functions should be defined. ApiHandler
 // functions should return any kind of value which will be turned into json
 // and an *ApiError.
-type ContextHandler func(context.Context, http.ResponseWriter, *http.Request) error
+type ContextHandler func(http.ResponseWriter, *http.Request) error
 
 // WriteError writes an error to the ResponseWriter. If no message is
 // specified, then we retrieve the default status text from the specified
