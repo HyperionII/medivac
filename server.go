@@ -14,17 +14,17 @@ type Server struct {
 
 // NewServer returns a new instance of the server.
 func NewServer() (*Server, error) {
-	server := &Server{}
-
 	log.Println("Configuring server..")
-	server.cfg = config.NewConfig()
-	server.cfg.Print()
-
-	if err := server.cfg.Validate(); err != nil {
-		return err
+	cfg, err := config.NewConfig()
+	cfg.Print()
+	if err != nil {
+		return nil, err
 	}
 
-	return server
+	server := &Server{
+		cfg: cfg,
+	}
+	return server, nil
 }
 
 // ListenAndServe attaches the current server to the specified configuration port.
