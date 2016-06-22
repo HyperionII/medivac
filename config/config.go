@@ -37,17 +37,17 @@ func NewConfig() (*Config, error) {
 		return nil, err
 	}
 
-	if err = cfg.validate(); err != nil {
+	if err := cfg.validate(); err != nil {
 		return nil, err
 	}
 
-	cfg.LifeTime = time.Minute * 30
+	cfg.SessionCookie.LifeTime = time.Minute * 30
 
 	return cfg, nil
 }
 
 func (c *Config) validate() error {
-	var errorMsg = "config: field [%v] was not set!"
+	errorMsg := "config: field [%v] was not set!"
 
 	// SessionCookie validation.
 	if c.SessionCookie.Name == "" {
@@ -63,25 +63,25 @@ func (c *Config) validate() error {
 		return fmt.Errorf(errorMsg, "App.Env")
 	}
 
-	//Db validation
-	if c.Db.Host == "" {
-		return fmt.Errorf(errorMsg, "Db.Host")
+	//DB validation
+	if c.DB.Host == "" {
+		return fmt.Errorf(errorMsg, "DB.Host")
 	}
 
-	if c.Db.Port == 0 {
-		return fmt.Errorf(errorMsg, "Db.Port")
+	if c.DB.Port == 0 {
+		return fmt.Errorf(errorMsg, "DB.Port")
 	}
 
-	if c.Db.User == "" {
-		return fmt.Errorf(errorMsg, "Db.User")
+	if c.DB.User == "" {
+		return fmt.Errorf(errorMsg, "DB.User")
 	}
 
-	if c.Db.Password == "" {
-		return fmt.Errorf(errorMsg, "Db.Password")
+	if c.DB.Password == "" {
+		return fmt.Errorf(errorMsg, "DB.Password")
 	}
 
-	if c.Db.Name == "" {
-		return fmt.Errorf(errorMsg, "Db.Name")
+	if c.DB.Name == "" {
+		return fmt.Errorf(errorMsg, "DB.Name")
 	}
 
 	return nil
@@ -94,8 +94,8 @@ func (c *Config) Print() {
 	log.Println("    Application Port:", c.App.Port)
 	log.Println("         Environment:", c.App.Env)
 	log.Println(" Session Cookie Name:", c.SessionCookie.Name)
-	log.Println("       Database Host:", c.Db.Host)
-	log.Println("       Database Port:", c.Db.Port)
-	log.Println("       Database Name:", c.Db.Name)
+	log.Println("       Database Host:", c.DB.Host)
+	log.Println("       Database Port:", c.DB.Port)
+	log.Println("       Database Name:", c.DB.Name)
 	log.Println("----------------------------------")
 }
