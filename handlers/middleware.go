@@ -19,7 +19,7 @@ import (
 //
 // The idea of a middleware function is to validate/read/modify data before or
 // after calling the next middleware function.
-type MiddlewareFunc func(httputils.ContextHandler) httputils.ContextHandler
+type MiddlewareFunc func(httputils.APIHandler) httputils.APIHandler
 
 // extendSessionLifetime determines if the session's lifetime needs to be
 // extended. Session's lifetime should be extended only if the session's
@@ -31,7 +31,7 @@ func extendSessionLifetime(sessionData *httputils.SessionData, sessionLifeTime t
 
 // ValidateAuth validates that the user cookie is set up before calling the
 // handler passed as parameter.
-func ValidateAuth(h httputils.ContextHandler) httputils.ContextHandler {
+func ValidateAuth(h httputils.APIHandler) httputils.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		var (
 			ctx             = r.Context()
@@ -87,7 +87,7 @@ func ValidateAuth(h httputils.ContextHandler) httputils.ContextHandler {
 }
 
 // GzipContent is a middleware function for handlers to encode content to gzip.
-func GzipContent(h httputils.ContextHandler) httputils.ContextHandler {
+func GzipContent(h httputils.APIHandler) httputils.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		w.Header().Add("Vary", "Accept-Encoding")
 
@@ -111,7 +111,7 @@ func GzipContent(h httputils.ContextHandler) httputils.ContextHandler {
 //
 // It is assumed that ValidateAuth was called before this function, or at
 // least some other session check was done before this.
-func Authorize(h httputils.ContextHandler) httputils.ContextHandler {
+func Authorize(h httputils.APIHandler) httputils.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		var (
 			ctx   = r.Context()
@@ -142,7 +142,7 @@ func Authorize(h httputils.ContextHandler) httputils.ContextHandler {
 // HandleHTTPError sets the appropriate headers to the response if a http
 // handler returned an error. This might be used in the future if different
 // types of errors are returned.
-func HandleHTTPError(h httputils.ContextHandler) httputils.ContextHandler {
+func HandleHTTPError(h httputils.APIHandler) httputils.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		err := h(w, r)
 

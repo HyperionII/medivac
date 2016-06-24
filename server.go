@@ -59,7 +59,7 @@ func (s *Server) configureRouter() {
 	s.bindRoutes(r.APIRoutes)
 }
 
-// makeHTTPHandler creates a http.HandlerFunc from a httputils.ContextHandler.
+// makeHTTPHandler creates a http.HandlerFunc from an httputils.APIHandler.
 func (s *Server) makeHTTPHandler(route routes.Route) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		handlerFunc := s.handleWithMiddlewares(route)
@@ -75,7 +75,7 @@ func (s *Server) makeHTTPHandler(route routes.Route) http.HandlerFunc {
 // middleware functions are applied depending on the route's properties, such
 // as ValidateAuth and Authorize middlewares. These last 2 functions require
 // that the route RequiresAuth() and that RequiredRoles() > 0.
-func (s *Server) handleWithMiddlewares(route routes.Route) httputils.ContextHandler {
+func (s *Server) handleWithMiddlewares(route routes.Route) httputils.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		h := route.HandlerFunc()
 		h = handlers.HandleHTTPError(h)

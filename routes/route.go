@@ -8,7 +8,7 @@ import (
 type Route interface {
 	Pattern() string
 	Method() string
-	HandlerFunc() httputils.ContextHandler
+	HandlerFunc() httputils.APIHandler
 	RequiresAuth() bool
 	RequiredRoles() []string
 }
@@ -16,7 +16,7 @@ type Route interface {
 type route struct {
 	pattern       string
 	method        string
-	handlerFunc   httputils.ContextHandler
+	handlerFunc   httputils.APIHandler
 	requiresAuth  bool
 	requiredRoles []string
 }
@@ -29,7 +29,7 @@ func (r *route) Method() string {
 	return r.method
 }
 
-func (r *route) HandlerFunc() httputils.ContextHandler {
+func (r *route) HandlerFunc() httputils.APIHandler {
 	return r.handlerFunc
 }
 

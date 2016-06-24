@@ -6,10 +6,8 @@ import (
 	"net/http"
 )
 
-// ContextHandler defines how API handler functions should be defined. ApiHandler
-// functions should return any kind of value which will be turned into json
-// and an *ApiError.
-type ContextHandler func(http.ResponseWriter, *http.Request) error
+// APIHandler is used to define API handler methods.
+type APIHandler func(http.ResponseWriter, *http.Request) error
 
 // WriteError writes an error to the ResponseWriter. If no message is
 // specified, then we retrieve the default status text from the specified
