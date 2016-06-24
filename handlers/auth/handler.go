@@ -3,8 +3,8 @@ package auth
 import (
 	"net/http"
 
-	"github.com/hyperionii/config"
-	"github.com/hyperionii/handlers/httputils"
+	"github.com/hyperionii/medivac/config"
+	"github.com/hyperionii/medivac/handlers/httputils"
 )
 
 // Handler structure for the auth handler.
@@ -20,7 +20,7 @@ func NewHandler(cfg *config.Config) Handler {
 }
 
 // Login does basic account/password login.
-func (h *handler) Login(w http.ResponseWriter, r *httpRequest) error {
+func (h *handler) Login(w http.ResponseWriter, r *http.Request) error {
 	var payload struct {
 		User     string
 		Password string

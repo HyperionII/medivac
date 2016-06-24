@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/ab22/abcd/handlers/httputils"
+	"github.com/hyperionii/medivac/handlers/httputils"
 )
 
 // Route interface.

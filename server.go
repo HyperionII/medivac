@@ -1,14 +1,13 @@
 package main
 
 import (
-	"context"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/hyperionii/medivac/config"
 	"github.com/hyperionii/medivac/handlers"
-	"github.com/hyperionii/medivac/httputils"
+	"github.com/hyperionii/medivac/handlers/httputils"
 	"github.com/hyperionii/medivac/routes"
 )
 
@@ -27,10 +26,11 @@ func NewServer() (*Server, error) {
 		return nil, err
 	}
 
-	server.configureRouter()
 	server := &Server{
 		cfg: cfg,
 	}
+
+	server.configureRouter()
 	return server, nil
 }
 
@@ -38,7 +38,7 @@ func NewServer() (*Server, error) {
 func (s *Server) ListenAndServe() error {
 	port := ":" + s.cfg.App.Port
 
-	return http.ListenAndServe(port, nil)
+	return http.ListenAndServe(port, s.router)
 }
 
 func (s *Server) bindRoutes(r []routes.Route) {
@@ -47,7 +47,7 @@ func (s *Server) bindRoutes(r []routes.Route) {
 
 		s.router.
 			Methods(route.Method()).
-			Path(r.Pattern()).
+			Path(route.Pattern()).
 			HandlerFunc(handler)
 	}
 }
@@ -56,14 +56,14 @@ func (s *Server) configureRouter() {
 	s.router = mux.NewRouter().StrictSlash(true)
 	r := routes.NewRoutes(s.cfg)
 
-	s.bindRoutes(r.routes)
+	s.bindRoutes(r.APIRoutes)
 }
 
 // makeHTTPHandler creates a http.HandlerFunc from a httputils.ContextHandler.
 func (s *Server) makeHTTPHandler(route routes.Route) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		handlerFunc := s.handleWithMiddlewares(route)
-		err := handlerFunc(ctx, w, r)
+		err := handlerFunc(w, r)
 
 		if err != nil {
 			log.Printf("Handler [%s][%s] returned error: %s", r.Method, r.URL.Path, err)
@@ -76,7 +76,7 @@ func (s *Server) makeHTTPHandler(route routes.Route) http.HandlerFunc {
 // as ValidateAuth and Authorize middlewares. These last 2 functions require
 // that the route RequiresAuth() and that RequiredRoles() > 0.
 func (s *Server) handleWithMiddlewares(route routes.Route) httputils.ContextHandler {
-	return func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	return func(w http.ResponseWriter, r *http.Request) error {
 		h := route.HandlerFunc()
 		h = handlers.HandleHTTPError(h)
 		h = handlers.GzipContent(h)
@@ -89,6 +89,6 @@ func (s *Server) handleWithMiddlewares(route routes.Route) httputils.ContextHand
 			h = handlers.ValidateAuth(h)
 		}
 
-		return h(serverCtx, w, r)
+		return h(w, r)
 	}
 }
