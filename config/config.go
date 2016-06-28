@@ -16,16 +16,16 @@ type Config struct {
 	}
 
 	App struct {
-		Port string `env:"PORT" envDefault:"1337"`
-		Env  string `env:"ENV" envDefault:"DEV"`
+		Port string `env:"MEDIVAC_PORT" envDefault:"1337"`
+		Env  string `env:"MEDIVAC_ENV" envDefault:"DEV"`
 	}
 
 	DB struct {
-		Host     string `env:"DB_HOST" envDefault:"localhost"`
-		Port     int    `env:"DB_PORT" envDefault:"5432"`
-		User     string `env:"DB_USER" envDefault:"postgres"`
-		Password string `env:"DB_PASS" envDefault:"1234"`
-		Name     string `env:"DB_NAME" envDefault:"abcd"`
+		Host     string `env:"MEDIVAC_DB_HOST" envDefault:"localhost"`
+		Port     int    `env:"MEDIVAC_DB_PORT" envDefault:"5432"`
+		User     string `env:"MEDIVAC_DB_USER" envDefault:"postgres"`
+		Password string `env:"MEDIVAC_DB_PASS" envDefault:"1234"`
+		Name     string `env:"MEDIVAC_DB_NAME" envDefault:"abcd"`
 	}
 }
 
